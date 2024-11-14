@@ -1,4 +1,4 @@
-créer mon blog sur gjini.co
+# Créer mon blog sur gjini.co
 
 - mon cv
 - retour rustlab
@@ -7,7 +7,7 @@ créer mon blog sur gjini.co
 - liane
 - crustace
 - bevy shaker
-- my rust tuto :
+- my rust tutos :
   - read the book "à plusieurs" : https://doc.rust-lang.org/book/
   - stack VS heap : efficient mem management
   - clean code with rust
