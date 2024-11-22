@@ -1,0 +1,29 @@
+dist_path: ".dist"
+content_path: "content"
+static_source_path: "public"
+static_files_extensions:
+  - css
+  - js
+  - png
+  - jpg
+  - jpeg
+  - gif
+  - svg
+  - webmanifest
+  - ico
+  - txt
+  - html
+  - ttf
+  - md
+static_path: "public"
+template: "template"
+domain: "https://gjini.co"
+title: "gjini.co"
+description: "blog"
+template_config:
+  index_tags:
+    - software
+    - adventure
+  index_article_id: "/me"
+yamd_processors:
+  convert_cloudinary_embed: false

@@ -1,13 +1,16 @@
 ---
 title: "Rustlab 2024 is my first rust conference"
-date: 2024-11-14T11:02:57+02:00
-image: https://res.cloudinary.com/barhamon/image/upload/c_scale,q_auto,w_650/v1620841615/header/month_in_check24.jpg
+date: 2024-11-22T17:42:58.973+01:00
+image: /public/images/rustlab-2024/PXL_20241111_162216303.MP.jpg
 preview: "My first rust conference in Florence was awesome. Here is what it feels to me."
 tags:
+- software
 - dev
 - rust
 - italia
 ---
+
+Lien vers la [prez](/prez/rustlab.html) : [Rustlab 2024](https://rustlab.it/2024)
 
 wgpu successor of WebGL
 
@@ -30,3 +33,16 @@ serhiy
 hippy-shake
 
 https://oxide.computer/
+
+# Rust lab 2024 à Firenze
+
+- 1 jour workshop
+- 2 jours talks
+- 2 tracks
+- nouritture et café offerte
+
+Organisé par l'entreprise Develer
+
+# Workshop 1
+
+| Build a Ray Tracer with Rust and wgpu

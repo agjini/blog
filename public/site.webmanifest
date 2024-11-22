@@ -1,0 +1,14 @@
+{
+  "name": "gjini.co",
+  "short_name": "gjini.co",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "460x307",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#2b2a2a",
+  "background_color": "#2b2a2a",
+  "display": "standalone"
+}
