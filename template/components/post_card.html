@@ -1,0 +1,33 @@
+{%- import "components/common.html" as common -%}
+
+<div class="card">
+  <a href="{{-page.pid ~ '.html'-}}">
+    <picture>
+      <source
+        media="(max-width: 340px)"
+        srcset="{{- get_image_url(src = page.metadata.image, width = 338) | safe -}}"
+      />
+      <source
+        media="(max-width: 500px)"
+        srcset="{{- get_image_url(src = page.metadata.image, width = 500) | safe -}}"
+      />
+      <source
+        media="(max-width: 700px)"
+        srcset="{{- get_image_url(src = page.metadata.image, width = 700) | safe -}}"
+      />
+      <img
+        src="{{- get_image_url(src = page.metadata.image, width = 338) | safe -}}"
+        alt="{{- page.metadata.title -}}"
+        loading="lazy"
+      />
+    </picture>
+  </a>
+  <div class="card-body">
+    <h3>
+      {{- common::local_page( path = page.pid ~ '.html', template="post.html",
+      text=page.metadata.title, title=page.metadata.title,
+      description=page.metadata.preview ) -}}
+    </h3>
+    <p>{{- page.metadata.preview -}}</p>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+{%- extends "base.html" -%}
+{%- import "components/common.html" as common -%}
+{%- block og_image -%}{%- endblock -%}
+{%- block og_url -%}{{- config.domain -}}{%- endblock -%}
+{%- block nav -%}
+&nbsp;
+{{- common::local_page(path='/tag/' ~ title ~ '.html', template="tag.html", text=title, title=title, description='all posts with tag: ' ~ title, page_num=0) -}}
+{%- endblock -%}
+{%- block content -%}
+  {%- set slice = get_pages_by_tag(tag = title, limit = 9, offset = page_num * 9) -%}
+  <div class="grid">
+  {%- for page in  slice.pages -%}
+    {%- include "components/post_card.html" -%}
+  {%- endfor -%}
+  </div>
+  {%- if slice.numbers | length > 1 -%}
+  <div class="pagination">
+  {%- for num in slice.numbers -%}
+    {%- if num.is_current -%}
+      <div class="current">
+      {{- num.display -}}
+      </div>
+    {%- else -%}
+      {%- if num.number == 0 -%}
+        <div>
+        {{- common::local_page(
+          path='/tag/' ~ title ~ '.html', 
+          template="tag.html", 
+          text=num.display, 
+          title=title, 
+          description='all posts with tag: ' ~ title, 
+          page_num=num.number
+        ) -}}
+        </div>
+      {%- else -%}
+        <div>
+        {{- common::local_page(
+          path='/tag/' ~ title ~ '/' ~ num.display ~ '.html', 
+          template="tag.html", 
+          text=num.display, 
+          title=title, 
+          description='all posts with tag: ' ~ title ~ ' page ' ~ num.display, 
+          page_num=num.number
+        ) -}}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  </div>
+  {%- else -%}
+  <div class="spacer"></div>
+  {%- endif -%}
+{%- endblock -%}

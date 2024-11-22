@@ -1,0 +1,228 @@
+{%- macro yamd(nodes) -%}
+{%- for node in nodes -%}
+{%- if node.type == "Pargargaph" -%}
+{{- yamd::P(nodes=node.value.body) -}}
+{%- elif node.type == 'Heading' -%}
+{{- yamd::H(node=node.value) -}}
+{%- elif node.type == 'Image' -%}
+{{- yamd::Image(node=node.value) -}}
+{%- elif node.type == 'Code' -%}
+{{- yamd::Code(node=node.value) -}}
+{%- elif node.type == 'List' -%}
+{{- yamd::List(node=node.value) -}}
+{%- elif node.type == 'Images' -%}
+{{- yamd::ImageGallery(node=node.value) -}}
+{%- elif node.type == 'Divider' -%}
+{{- yamd::Divider() -}}
+{%- elif node.type == 'Embed' -%}
+{{- yamd::Embed(node=node.value) -}}
+{%- elif node.type == 'Collapsible' -%}
+{{- yamd::Collapsible(node=node.value) -}}
+{%- elif node.type == 'Highlight' -%}
+{{- yamd::Highlight(node=node.value) -}}
+{%- endif -%}
+{%- endfor -%}
+{%- endmacro yamd -%}
+
+{%- macro H(node) -%}
+<h{{- node.level -}}>
+<a id="{{- yamd::stringify_heading(body = node.body) -}}" href="#{{- yamd::stringify_heading(body = node.body) -}}" class="second">#</a>
+{%- for n in node.body-%}
+{%- if n.type == 'Text' -%}
+{{- n.value -}}
+{%- elif n.type == 'Anchor' -%}
+{{- yamd::A(node=n.value) -}}
+{%- endif -%}
+{%- endfor -%}
+</h{{- node.level -}}>
+{%- endmacro H -%}
+
+{%- macro P(nodes) -%}
+<p>
+  {%- for node in nodes -%}
+  {%- if node.type == 'Anchor' -%}
+  {{- yamd::A(node=node.value) -}}
+  {%- elif node.type == 'Text' -%}
+  {{- node.value -}}
+  {%- elif node.type == 'Bold' -%}
+  {{- yamd::B(nodes=node.value.body) -}}
+  {%- elif node.type == 'Italic' -%}
+  {{- yamd::I(node=node.value) -}}
+  {%- elif node.type == 'Strikethrough' -%}
+  {{- yamd::S(node=node.value) -}}
+  {%- elif node.type == 'CodeSpan' -%}
+  {{- yamd::InlineCode(node=node.value) -}}
+  {%- endif -%}
+  {%- endfor -%}
+</p>
+{%- endmacro P -%}
+
+{%- macro A(node) -%}
+{%- set page = get_page_by_path( path = node.url ) -%}
+{%- if page -%}
+{{- common::local_page( path=page.pid ~ '.html', template="post.html", text=node.text, title=page.metadata.title, description=page.metadata.preview ) -}}
+{%- else -%}<a href="{{- node.url -}}">{{- node.text -}}</a>{%- endif -%}
+{%- endmacro A -%}
+
+{%- macro B(nodes) -%}
+{%- for node in nodes -%}
+<b>
+  {%- if node.type == 'Text' -%}
+  {{- node.value -}}
+  {%- elif node.type == 'Strikethrough' -%}
+  {{- yamd::S(node=node.value) -}}
+  {%- elif node.type == 'Italic' -%}
+  {{- yamd::I(node=node.value) -}}
+  {%- endif -%}
+</b>
+{%- endfor -%}
+{%- endmacro B -%}
+
+{%- macro I(node) -%}
+<i>{{- node -}}</i>
+{%- endmacro I -%}
+
+{%- macro S(node) -%}
+<s>{{- node -}}</s>
+{%- endmacro S -%}
+
+{%- macro InlineCode(node) -%}
+<code>{{- node -}}</code>
+{%- endmacro InlineCode -%}
+
+{%- macro Image(node) -%}
+{{- common::image(src = node.src, alt = node.alt)-}}
+{%- endmacro Image -%}
+
+{%- macro Code(node) -%}
+<pre><code>{{- code(code=node.code, language=node.lang) | safe -}}</code></pre>
+{%- endmacro Code -%}
+
+{%- macro List(node) -%}
+{%- if node.list_type == 'Unordered' -%}
+<ul>
+  {%- else -%}
+  <ol>
+    {%- endif -%}
+    {%- for list_item in node.body -%}
+    {{- yamd::ListItem(node=list_item) -}}
+    {%- endfor -%}
+    {%- if node.list_type == 'Unordered' -%}
+</ul>
+{%- else -%}
+</ol>
+{%- endif -%}
+
+{%- endmacro List -%}
+
+{%- macro ListItem(node) -%}
+<li>
+  {%- for inner_node in node.text -%}
+  {%- if inner_node.type == 'Text' -%}
+  {{- inner_node.value -}}
+  {%- elif inner_node.type == 'Bold' -%}
+  {{- yamd::B(nodes=inner_node.value) -}}
+  {%- elif inner_node.type == 'Italic' -%}
+  {{- yamd::I(node=inner_node.value) -}}
+  {%- elif inner_node.type == 'Strikethrough' -%}
+  {{- yamd::S(node=inner_node.value) -}}
+  {%- elif inner_node.type == 'CodeSpan' -%}
+  {{- yamd::InlineCode(node=inner_node.value) -}}
+  {%- elif inner_node.type == 'Anchor' -%}
+  {{- yamd::A(node=inner_node.value) -}}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- if node.nested_list -%}
+  {{- yamd::List(node=node.nested_list) -}}
+  {%- endif -%}
+</li>
+{%- endmacro ListItem -%}
+
+
+{%- macro ImageGallery(node) -%}
+<div class="ig">
+  <div class="image">
+    {%- for node in node.body -%}
+    <div id="{{- node.alt -}}">
+      {%- if loop.index0 > 0 -%}
+      {%- set previous = node.body | nth(n=loop.index0 - 1) -%}
+        <a class="left" href="#{{- previous.alt -}}">⟨</a>
+      {%- endif -%}
+      {%- if not loop.last -%}
+      {%- set next = node.body | nth(n=loop.index) -%}
+        <a class="right" href="#{{- next.alt -}}">⟩</a>
+      {%- endif -%}
+      {{- common::image(src = node.src, alt = node.alt) -}}
+    </div>
+    {%- endfor -%}
+    <a class="fullscreen" onclick="fullscreen(arguments[0])">⛶</a>
+  </div>
+  <div class="thumb">
+    {%- for image in node.body -%}
+    <a href="#{{- image.alt -}}">
+      <img src="{{- get_image_url(src = image.src, width = 98, height = 98) | safe -}}" alt="{{- image.alt -}}"
+        loading="lazy" />
+    </a>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endmacro ImageGallery -%}
+
+{%- macro Divider() -%}
+<hr />
+{%- endmacro Divider -%}
+
+{%- macro Embed(node) -%}
+{%- if node.kind | lower == 'youtube' -%}
+<iframe class="youtube" src="{{- node.args -}}" frameBorder="0"
+  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen=""></iframe>
+{%- else -%}
+<iframe class="{{- node.kind -}}" src="{{- node.args -}}" frameBorder="0" allowFullScreen=""></iframe>
+{%- endif -%}
+{%- endmacro Embed -%}
+
+{%- macro Collapsible(node) -%}
+  <div class="collapsible">
+    <input type="checkbox" id="{{- node.title -}}" />
+    <label for="{{- node.title -}}">
+      {%- include 'components/icons/play.html' -%}
+      {{- node.title -}}
+    </label>
+    <div class="body">
+      {{- yamd::yamd(nodes=node.body) -}}
+    </div>
+  </div>
+{%- endmacro -%}
+
+{%- macro Highlight(node) -%}
+<div class="highlight">
+  {%- if node.icon -%}
+  <div class="hicon">
+    {{- common::Icon(name=node.icon) -}}
+  </div>
+  {%- endif -%}
+  <div class="body">
+    {%- if node.title -%}
+    <h3 class="title">
+      {{- node.title -}}
+    </h3>
+    {%- endif -%}
+    <div class="content">
+      {%- for inner_node in node.body -%}
+      {{- yamd::P(nodes=inner_node.body) -}}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+
+{%- macro stringify_heading(body) -%}
+{%- for n in body -%}
+{%- if n.type == 'Text' -%}
+{{- n.value -}}
+{%- elif n.type == 'Anchor' -%}
+{{- n.value.text -}}
+{%- endif -%}
+{%- endfor -%}
+{%- endmacro stringify_heading -%}

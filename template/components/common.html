@@ -1,0 +1,65 @@
+{%- macro local_page(path, template, text, title, description, page_num=0) -%}
+{{- self::external_page(url = path, text = text) -}} {{- add_page(path =
+path,template = template, title = title, description = description, page_num =
+page_num) -}} {%- endmacro local_page -%} {%- macro external_page(url, text) -%}
+<a href="{{- url -}}">{{- text -}}</a>
+{%- endmacro external_page -%} {%- macro Icon(name) -%} {%- if name == "play"
+-%} {%- include "components/icons/play.html" -%} {%- elif name =="spotify" -%}
+{%- include "components/icons/spotify.html" -%} {%- elif name == "youtube" -%}
+{%- include "components/icons/youtube.html" -%} {%- elif name == "itunes" -%}
+{%- include "components/icons/itunes.html" -%} {%- elif name =="handshake" -%}
+{%- include "components/icons/handshake.html" -%} {%- elif name == "microchip"
+-%} {%- include "components/icons/microchip.html" -%} {%- elif name == "meh" -%}
+{%- include "components/icons/face-meh.html" -%} {%- elif name == "birthday
+cake" -%} {%- include "components/icons/cake-candles.html" -%} {%- elif name ==
+"smile" -%} {%- include "components/icons/face-smile.html" -%} {%- elif name ==
+"warning sign" -%} {%- include "components/icons/triangle-exclamation.html" -%}
+{%- elif name == "envelope" -%} {%- include "components/icons/envelope.html" -%}
+{%- elif name == "bandcamp" -%} {%- include "components/icons/bandcamp.html" -%}
+{%- elif name == "mixcloud" -%} {%- include "components/icons/mixcloud.html" -%}
+{%- elif name == "soundcloud" -%} {%- include "components/icons/soundcloud.html"
+-%} {%- elif name == "lightbulb" -%} {%- include
+"components/icons/lightbulb.html" -%} {%- elif name == "info circle" -%} {%-
+include "components/icons/circle-info.html" -%} {%- elif name == "github" -%}
+{%- include "components/icons/github.html" -%} {%- elif name == "facebook" -%}
+{%- include "components/icons/facebook.html" -%} {%- elif name == "mastodon" -%}
+{%- include "components/icons/mastodon.html" -%} {%- elif name == "rss" -%} {%-
+include "components/icons/rss.html" -%} {%- elif name == "json_feed" -%} {%-
+include "components/icons/json_feed.html" -%} {%- elif name == "calendar" -%}
+{%- include "components/icons/calendar.html" -%} {%- elif name == "instagram"
+-%} {%- include "components/icons/instagram.html" -%} {%- elif name ==
+"arrow-left" -%} {%- include "components/icons/arrow-left.html" -%} {%- elif
+name == "arrow-up" -%} {%- include "components/icons/arrow-up.html" -%} {%- elif
+name == "pepper-hot" -%} {%- include "components/icons/pepper-hot.html" -%} {%-
+elif name == "chevron-left" -%} {%- include "components/icons/chevron-left.html"
+-%} {%- elif name == "chevron-right" -%} {%- include
+"components/icons/chevron-right.html" -%} {%- elif name == "link" -%} {%-
+include "components/icons/link.html" -%} {%- elif name == "computer" -%} {%-
+include "components/icons/computer.html"-%} {%- elif name == "list-check" -%}
+{%- include "components/icons/list-check.html"-%} {%- else -%} {{- name -}} {%-
+endif -%} {%- endmacro -%} {%-macro image(src, alt)-%}
+<picture>
+    <source
+        media="(max-width: 341px)"
+        srcset="{{- get_image_url(src = src, width = 340) | safe -}}"
+    />
+    <source
+        media="(max-width: 781px)"
+        srcset="{{- get_image_url(src = src, width = 780) | safe -}}"
+    />
+    <source
+        media="(max-width: 1001px)"
+        srcset="{{- get_image_url(src =src , width = 1000) | safe -}}"
+    />
+    <source
+        media="(display-mode: fullscreen)"
+        srcset="{{- get_image_url(src =src , width = 2000) | safe -}}"
+    />
+    <img
+        src="{{- get_image_url(src = src, width = 1000) | safe -}}"
+        alt="{{- alt -}}"
+        loading="lazy"
+        class="object-contain"
+    />
+</picture>
+{%- endmacro -%}

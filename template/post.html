@@ -1,0 +1,54 @@
+{%- extends "base.html" -%}
+{%- import "components/common.html" as common -%}
+{%- import "components/yamd.html" as yamd -%}
+
+
+{%- block og_image -%}
+  {%- set page= get_page_by_path( path = path ) -%}
+  {{- get_image_url(src = page.metadata.image, width = 1012, height = 682) | safe -}}
+{%- endblock -%}
+{%- block og_type -%}article{%- endblock -%}
+{%- block og_url -%}{{- config.domain -}}{{- path | trim_start_matches(pat="/") -}}{%- endblock -%}
+{%- block nav -%}
+{%- if page.metadata.tags[0] -%}
+&nbsp;
+{%- set t = page.metadata.tags[0] -%}
+{{- common::local_page(path='/tag/' ~ t ~ '.html', template="tag.html", text=t, title=t, description='all articles tagged: ' ~ t, page_num=0) -}}
+{%- endif -%}
+{%- endblock -%}
+{%- block content -%}
+  <article class="post">
+    {{- common::image(src = page.metadata.image, alt = page.metadata.title) -}}
+    <h1 class="title">{{- title -}}</h1>
+    {{- yamd::yamd(nodes=page.content.body) -}}
+    <div class="metadata">
+      <div>
+        tags:
+      </div>
+      <div class="tags">
+        {%- for tag in page.metadata.tags -%}
+        {{- common::local_page(path='/tag/' ~ tag ~ '.html', template="tag.html", text=tag, title=tag, description='all posts with tag: ' ~ tag) -}}
+        {%- endfor -%}
+      </div>
+      <div>
+        posted on:
+      </div>
+      <div>
+        {{- page.metadata.date -}}
+      </div>
+      {%- set similar = get_similar(pid = page.pid, limit = 3) -%}
+      {%- if similar | length > 0 -%}
+        <div>More:<div>
+          {%- endif -%}
+    </div>
+  </article>
+        {%- if similar | length > 0 -%}
+          <div class="grid">
+            {%- for pid in similar -%}
+            {%- set page = get_page_by_pid( pid = pid ) -%}
+            {%- include "components/post_card.html" -%}
+            {%- endfor -%}
+          </div>
+          {%- endif -%}
+
+{%- endblock -%}

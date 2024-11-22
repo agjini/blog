@@ -1,0 +1,26 @@
+{%- import "components/common.html" as common -%}
+{%- import "components/yamd.html" as yamd -%}
+
+{%- extends "base.html" -%}
+{%- block og_image -%}{%- set page= get_page_by_pid( pid = config.template_config.index_article_id  ) -%}
+  {{- get_image_url(src = page.metadata.image, width = 1012, height = 682) | safe -}}
+{%- endblock -%}
+{%- block og_url -%}{{- config.domain -}}{%- endblock -%}
+{%- block content -%}
+  <div class="post">
+    {{- common::image(src = page.metadata.image, alt = page.metadata.title) -}}
+    {{- yamd::yamd(nodes=page.content.body) -}}
+  </div>
+  {%- for tag in config.template_config.index_tags -%}
+    <h2>{{- tag | capitalize -}}: <a class="second" href="/tag/{{- tag -}}.html">see all</a></h2>
+    <div class="grid">
+      {%- set slice = get_pages_by_tag(tag = tag, limit = 3, offset = 0) -%}
+      {%- for page in  slice.pages -%}
+        {%- include "components/post_card.html" -%}
+      {%- endfor -%}
+    </div>
+    <div class="spacer"></div>
+  {%- endfor -%}
+{%- endblock -%}
+
+
